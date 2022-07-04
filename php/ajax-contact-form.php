@@ -58,28 +58,41 @@ class Ajax_Contact_Form {
     public function __construct() {
         // Demo message.
         if ( $this->demo ) {
+            print('Success demo...');
             $this->successHandler('demo');
         }
 
         // Ajax check.
         if ( ! isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) || 'XMLHttpRequest' !== $_SERVER['HTTP_X_REQUESTED_WITH'] ) {
+            print('Error ajax only.');
             $this->errorHandler('ajax_only');
         }
 
         // Get post data.
+        print('Get post data...');
         $name    = stripslashes(trim($_POST['name']));
         $email   = stripslashes(trim($_POST['email']));
         $message = stripslashes(trim($_POST['message']));
 
+        print("name: ".$name);
+        print("email: ".$email);
+        print("message: ".$message);
+
         // Sanitize fields.
+        print("Sanitize fields...");
         $name = filter_var($name, FILTER_SANITIZE_STRING);
         $email = filter_var($email, FILTER_SANITIZE_EMAIL);
         $message = filter_var($message, FILTER_SANITIZE_STRING);
         $message = nl2br($message, false); // false gives <br>, true gives <br />
 
+        print("name: ".$name);
+        print("email: ".$email);
+        print("message: ".$message);
+
         // Check header injection.
         $pattern = '/[\r\n]|Content-Type:|Bcc:|Cc:/i';
         if ( preg_match($pattern, $name) || preg_match($pattern, $email) ) {
+            print("Error header injection.");
             $this->errorHandler('header_injection');
         }
 
@@ -88,20 +101,24 @@ class Ajax_Contact_Form {
 
         // Check if name has been entered.
         if ( ! $name ) {
+            print("Error name not entered.");
             $this->errorHandler('enter_name');
         }
 
         // Check if email has been entered and is valid.
         if ( ! $isEmailValid || ! $email ) {
+            print("Error email not entered.");
             $this->errorHandler('enter_email');
         }
 
         // Check if message has been entered.
         if ( ! $message ) {
+            print("Error message not entered.");
             $this->errorHandler('enter_message');
         }
 
         // Prepare headers.
+        print("Prepare headers...");
         $headers  = 'MIME-Version: 1.1' . PHP_EOL;
         $headers .= 'Content-type: text/html; charset=utf-8' . PHP_EOL;
         $headers .= "From: $name <$email>" . PHP_EOL;
@@ -110,6 +127,7 @@ class Ajax_Contact_Form {
         $headers .= "X-Mailer: PHP/". phpversion() . PHP_EOL;
 
         // Prepare body.
+        print("Prepare body...");
         $body = $this->getString('body');
         $body = $this->template( $body, array(
             'subject' => $this->message_subject,
@@ -129,10 +147,13 @@ class Ajax_Contact_Form {
         </html>";
 
         // If there is no error, send the email.
+        print("Send email...");
         $result = @mail($this->address_destination, $this->message_subject, $body, $headers);
         if ( $result ) {
+            print("Email send success.");
             $this->successHandler('success');
         } else {
+            print("Email send error.");
             $this->errorHandler('error');
         }
     }
