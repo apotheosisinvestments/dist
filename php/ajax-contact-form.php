@@ -56,6 +56,8 @@ class Ajax_Contact_Form {
      * nK_Contact_Form constructor.
      */
     public function __construct() {
+        print("Ajax contact form invoked.");
+        
         // Demo message.
         if ( $this->demo ) {
             print('Success demo...');
