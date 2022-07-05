@@ -50,7 +50,7 @@ class Ajax_Contact_Form {
      *
      * @var bool
      */
-    protected $demo = true;
+    protected $demo = false;
 
     /**
      * nK_Contact_Form constructor.
