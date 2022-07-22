@@ -663,6 +663,10 @@ h6,
     padding-top: 30px;
 }
 
+.rowteam{
+    align-items: center;
+}
+
 .row.vertical-gap {
     margin-top: -30px;
 }
